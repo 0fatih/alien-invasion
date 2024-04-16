@@ -1,5 +1,3 @@
-use crate::world::{self, World};
-
 #[derive(Debug)]
 pub struct Alien {
     pub name: String,

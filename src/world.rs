@@ -2,7 +2,7 @@ use crate::{
     alien::{self, Alien},
     error::AppError,
 };
-use std::{collections::HashMap, str::FromStr};
+use std::{collections::HashMap, fmt::Display, fs, str::FromStr};
 use tracing::{debug, error, info};
 
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
@@ -20,6 +20,17 @@ impl Direction {
             Direction::South => Direction::North,
             Direction::East => Direction::West,
             Direction::West => Direction::East,
+        }
+    }
+}
+
+impl Display for Direction {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Direction::North => write!(f, "north"),
+            Direction::South => write!(f, "south"),
+            Direction::East => write!(f, "east"),
+            Direction::West => write!(f, "west"),
         }
     }
 }
@@ -67,10 +78,10 @@ impl World {
         for alien in self
             .aliens
             .iter_mut()
-            .filter(|a| a.is_dead == false && a.is_trapped == false)
+            .filter(|a| !a.is_dead && !a.is_trapped)
         {
             let current_city = self.routes.get(&alien.current_city).unwrap();
-            if current_city.len() == 0 {
+            if current_city.is_empty() {
                 alien.is_trapped = true;
                 continue;
             }
@@ -169,12 +180,15 @@ impl World {
         info!("Loaded map with {} cities", self.cities.len());
     }
 
-    pub fn print_map(&self) {
+    pub fn write_map(&self, output_file: &str) {
+        let mut output = String::new();
         for (city, routes) in self.routes.iter() {
-            println!("{}:", city);
+            output = format!("{}{}:\n", output, city);
             for (direction, destination) in routes.iter() {
-                println!("  {:?} -> {}", direction, destination);
+                output = format!("{} {}={}\n", output, direction, destination);
             }
         }
+
+        fs::write(output_file, output).unwrap();
     }
 }

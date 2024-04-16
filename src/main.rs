@@ -1,7 +1,7 @@
 use std::process::exit;
 
 use clap::Parser;
-use tracing::{debug, info, trace};
+use tracing::info;
 use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::util::SubscriberInitExt;
 
@@ -41,15 +41,17 @@ fn main() {
         world.day_and_night();
 
         if world.aliens.iter().all(|a| a.is_dead || a.is_trapped) {
-            info!("All aliens are dead or trapped. Ending simulation.");
-            exit(0);
+            info!("All aliens are dead or trapped.");
+            break;
         }
 
-        if world.cities.len() == 0 {
+        if world.cities.is_empty() {
             info!("All cities are destroyed. Poor humans.");
             exit(0);
         }
     }
 
-    info!("Humanity survived the alien invasion.")
+    info!("Humanity survived the alien invasion.");
+
+    world.write_map("output.txt");
 }

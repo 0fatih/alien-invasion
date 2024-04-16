@@ -1,0 +1,36 @@
+C8:
+ west=C9
+ east=C7
+ north=C5
+ south=C0
+C0:
+ north=C8
+C3:
+ east=C2
+ south=C6
+C2:
+ south=C5
+ east=C1
+ west=C3
+C1:
+ west=C2
+ south=C4
+C6:
+ south=C9
+ north=C3
+ east=C5
+C5:
+ east=C4
+ north=C2
+ west=C6
+ south=C8
+C4:
+ south=C7
+ north=C1
+ west=C5
+C7:
+ north=C4
+ west=C8
+C9:
+ north=C6
+ east=C8
